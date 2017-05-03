@@ -1,0 +1,190 @@
+/*----------------------------DISEÑO RESPONSIVE-------------------------------*/
+
+*{
+    padding: 0;
+    margin: 0;
+    font-style: arial;
+}
+
+html, body{
+    height: 100%;
+    background-color: #dfe3ee;
+}
+
+header{
+    background-color: #204060;
+    width: 100%;
+    height: 7%;
+}
+
+footer{
+    clear: both;
+    width: 100%;
+    text-align: center;
+    background-color: #204060;
+    color: white;
+    bottom: 0;
+}
+
+a{
+    text-decoration:none;
+    color: black;
+}
+
+h4 a{
+    text-decoration:none;
+    color: white
+}
+
+.logo{
+    display: none;
+}
+
+#nombre{
+    position: relative;
+    color: white;
+    float: left;
+    width: 30%;
+    margin-left: 5%;
+    font-size: 25px;
+    font-family: impact;
+    text-align: center;
+    margin-top: 1%;
+}
+
+/*--------------PORTADA.HTML--------------------------------------------------*/
+
+.fotoPerfil{
+    position: absolute;
+    width: 7%;
+    height: 5%;
+    margin-left: 40%;
+}
+
+#botonera{
+    text-align: center;
+    border-bottom: 1px solid #204060;
+    font-size: 15px;
+    width: 100%;
+}
+
+.scroll{
+    overflow: scroll;
+    height: 20%;
+    width: 100%;
+    border-bottom: 1px solid #204060;
+}
+
+.cabecera{
+    display: none;
+}
+
+aside{
+    display: none;
+    width: 20%;
+    padding: 2%;
+    height: 50%;
+    overflow: scroll;
+    border-left: 2px solid #204060;
+    text-align: center;
+    color: white;
+    position: fixed;
+}
+
+.contenidoInferior{
+    width: 100%;
+    height: 300px;
+    min-height: 100%;
+}
+
+.historia{
+    width: 75%;
+    margin-left: 7%;
+}
+
+.fotoconectado{
+    clear: both;
+    width: 40%;
+    height: 50px;
+    border: 1px solid #8b9dc3;
+}
+
+#mostrar{
+    display: none;
+    float: left;
+    text-align: center;
+}
+#mostrar:checked ~ aside{
+    display: block;
+    overflow: scroll;
+}
+
+.inputlabel {
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+    height: 12px;
+    padding-bottom: 5px;
+    background-color: #204060;
+    color: white;
+}
+
+#mostrar ~ .inputlabel:before {
+    content: "ABRIR CONECTADOS"
+}
+
+#mostrar ~ aside {
+    display: none;
+    padding: 5px 5px;
+    background-color: #204060;
+}
+
+#mostrar:checked ~ aside {
+    display: block;overflow: scroll;
+}
+
+#mostrar:checked ~ .inputlabel:before {
+    content: "CERRAR CONECTADOS"
+}
+
+#historiaIndividual{
+    float: left;
+    padding-bottom: 10%;
+    border: 1px;
+    border-style: solid;
+    border-color: #204060;
+    margin: 1%;
+    margin-left: 30%;
+    height: auto;
+    width: 50%;
+    overflow: hidden;
+    background-color: #f7f7f7;
+    overflow: scroll;
+    box-shadow: none;
+}
+
+.textofoto{
+    text-align: center;
+    float: left;
+    width: 15%;
+    height: 50px;
+    padding: 3%;
+}
+
+.textoConectado{
+    margin-top: 10%;
+    color: white;
+}
+
+.botonSalir{
+    float: right;
+    margin-right: 5%;
+    margin-top: 3%;
+    border-radius: 0;
+}
+
+.flecha{
+    clear: left;
+    margin-left: 30%;
+    width: 3%;
+}
