@@ -14,14 +14,14 @@
         <p>VisitsBook</p>
     </section>
     <section id="usuario">
-        <form action="login.php" method="post">
+        <form action="login.php" method="get">
             <label for="user">Usuario</label>
             <br/>
-            <input id="user" type="text" name="campoUsuario" required/>
+            <input id="user" type="text" name="user" required/>
             <br/>
             <label for="password">Contraseña</label>
             <br/>
-            <input id="password" type="password" name="campoPassword" required/>
+            <input id="password" type="password" name="password" required/>
             <br/>
             <input type="submit" name="inicio" value="Inicio"/>
         </form>
@@ -33,7 +33,7 @@
     </section>
     <section class="formulario">
         <p class="registro">Registrarse</p>
-        <form action="userNew.php" method="post">
+        <form action="userNew.php" method="get">
             <input class ="datos" type="text" name="registronombre" placeholder="Nombre" size=20 required/>
             <input class ="datos" type="text" name="registroapellidos" placeholder="Apellidos" size=20 required/>
             <br/>

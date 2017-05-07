@@ -1,43 +1,18 @@
 <?php
+  require_once ('usuario.php');
 
-  echo "connecting .....";
+  session_start();
 
-  $servername = "localhost";
-  $database = "miprueba";
-  $username = "root";
-  $password = "root";
+  if(Usuario::validarUsuario($_GET["user"],$_GET["password"]) ){
 
-  // Create connection
+      $_SESSION["usuario"] = $_GET["user"];
 
-  $conn = mysqli_connect($servername, $username, $password, $database);
-
-  // Check connection
-
-  if (!$conn) {
-
-      die("Connection failed: " . mysqli_connect_error());
-
+      header('Location: portada.php');
+      exit;
   }
-
-
-  $user = $_REQUEST["campoUsuario"];
-  $password = $_REQUEST["campoPassword"];
-
-  // Consultar si el usuario envió la contraseña correcta
-  $consulta = sprintf("SELECT password FROM login WHERE name='%s';",
-                  pg_escape_string($user));
-
-  $fila = pg_fetch_assoc(pg_query($conn, $consulta));
-
-  if ($fila && password_verify($contraseña, $fila['password'])) {
-      echo 'Bienvenido, ' . htmlspecialchars($user) . '!';
-  } else {
-      echo 'La autenticación ha fallado para ' . htmlspecialchars($user) . '.';
+  else{
+      echo "Usuario o contraseña incorrecto";
+      exit;
   }
-
-  echo "succefully connect";
-
-  header('Location: portada.html');
-  exit;
 
 ?>

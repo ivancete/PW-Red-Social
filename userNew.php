@@ -1,34 +1,25 @@
 <?php
 
-  echo "connecting .....";
+  require_once ('usuario.php');
 
-  $servername = "localhost";
-  $database = "miprueba";
-  $username = "root";
-  $password = "root";
+  //Comprobamos que las casillas han sido rellenadas de datos, y que los password son equivalentes.
 
-  // Create connection
-
-  $conn = mysqli_connect($servername, $username, $password, $database);
-
-  // Check connection
-
-  if (!$conn) {
-
-      die("Connection failed: " . mysqli_connect_error());
-
+  if($_GET["registropassword"] != $_GET["registropasswordrepeticion"]) {
+      echo "El password no es equivalente al de la repetición de password";
+      exit;
   }
 
-  // Almacenar el hash de la contraseña
-  $consulta  = sprintf("INSERT INTO login(usuario,password) VALUES('%s','%s');",
-                  pg_escape_string($user),
-                  password_hash($password, PASSWORD_DEFAULT));
+  $directorioUser = trim($_GET["correo"]);
 
-  $resultado = pg_query($conn, $consulta);
+  if(!mkdir($directorioUser, 0777)) {
+      die('Fallo al crear las carpetas...');
+  }
 
-  echo "succefully register";
 
-  header('Location: portada.html');
+  Usuario::insertarUsuario($_GET["correo"], $_GET["registropassword"], $_GET["registronombre"],
+      $_GET["registroapellidos"], $_GET["sexo"]);
+
+  header('Location: portada.php');
   exit;
 
 
