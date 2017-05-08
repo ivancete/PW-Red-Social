@@ -132,41 +132,6 @@ class Usuario extends Mysql{
         }
 
     }
-
-    public static function devolverHistorias(){
-
-        $connect = parent::connect();
-
-        $sql = "SELECT * FROM " .TABLA_USUARIOS;
-
-        try {
-            $st = $connect->prepare( $sql );
-
-            $st->execute();
-
-            //Devuelve las filas correspondientes
-
-            $amigos = array();
-
-            foreach ( $st->fetchAll() as $fila ) {
-                $amigos[] = new Usuario($fila);
-            }
-
-            parent::desconect( $connect );
-
-            if( $amigos ){
-
-                return $amigos;
-            }
-
-        } catch ( PDOException $e ) {
-
-            parent::desconect( $connect );
-            die( "Consulta fallada: " . $e->getMessage() );
-
-        }
-
-    }
 }
 
 ?>

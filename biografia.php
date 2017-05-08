@@ -18,7 +18,7 @@ session_start();
 <header>
     <section>
         <?php
-            echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
+        echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
                     <img class='logo' alt='Logo' src='ugrL.png'/>
                  </a>";
         ?>
@@ -26,7 +26,7 @@ session_start();
     </section>
     <section>
         <?php
-            echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
+        echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
                     <p id='nombre'>VisitsBook</p>
                   </a>";
         ?>
@@ -46,19 +46,19 @@ session_start();
             }
         }
 
-            $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
+        $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
 
-            $imagen = $consulta->devolverValor("fotoperfil");
+        $imagen = $consulta->devolverValor("fotoperfil");
 
-            echo "<a href='paginaEntrada.php'>
+        echo "<a href='paginaEntrada.php'>
                         <img class='fotoPerfil' alt='fotoPerfil' src='$imagen'/>
                   </a>";
         ?>
     </section>
 </header>
 <section id="botonera">
-<?php
-echo    "<a href='biografia.php?usuarioamigo=$usuario_activo'>
+    <?php
+    echo    "<a href='biografia.php?usuarioamigo=$usuario_activo'>
             Biografía
         </a>
             -
@@ -69,30 +69,30 @@ echo    "<a href='biografia.php?usuarioamigo=$usuario_activo'>
         <a href='informacion.php?usuarioamigo=$usuario_activo'>
             Información
         </a>";
-?>
+    ?>
 </section>
 <section class="scroll">
     <?php
 
-        $conectados = Usuario::devolverAmigos();
+    $conectados = Usuario::devolverAmigos();
 
-        for($i = 0; $i < count($conectados); ++$i) {
+    for($i = 0; $i < count($conectados); ++$i) {
 
-            $usuario = $conectados[$i]->devolverValor("usuario");
+        $usuario = $conectados[$i]->devolverValor("usuario");
 
-            $name = $conectados[$i]->devolverValor("nombre");
+        $name = $conectados[$i]->devolverValor("nombre");
 
-            $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
+        $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
 
-            $name_mayuscula = strtoupper($name);
+        $name_mayuscula = strtoupper($name);
 
-            echo "<a href='portada.php?usuarioamigo=$usuario'>
+        echo "<a href='portada.php?usuarioamigo=$usuario'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
                         <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
                     </article>
                   </a>";
-        }
+    }
     ?>
 
 </section>
@@ -125,52 +125,20 @@ echo    "<a href='biografia.php?usuarioamigo=$usuario_activo'>
     <section class="historia">
         <?php
 
-        if ($usuario_activo == $_SESSION["usuario"]){
-            $historias_amigos = Historia::obtenerHistoriasAmigos($usuario_activo);
+        $historias_mias = Historia::obtenerMisHistorias($usuario_activo);
 
-            for($i = 0; $i < count($historias_amigos); ++$i) {
+        for($i = 0; $i < count($historias_mias); ++$i) {
 
-                $usuario = $historias_amigos[$i]->devolverValor("usuario");
+            $descripcion = $historias_mias[$i]->devolverValor("descripcion");
 
-                $descripcion = $historias_amigos[$i]->devolverValor("descripcion");
+            $titulo = $historias_mias[$i]->devolverValor("titulo");
 
-                $titulo = $historias_amigos[$i]->devolverValor("titulo");
+            $fecha = $historias_mias[$i]->devolverValor("fecha");
 
-                $fecha = $historias_amigos[$i]->devolverValor("fecha");
+            $titulo_mayuscula = strtoupper($titulo);
 
-                $persona = Usuario::obtenerUsuario($usuario);
-
-                $imagenPerfil = $persona->devolverValor("fotoperfil");
-
-                $nombrePerfil = $persona->devolverValor("nombre");
-
-                $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
-
-                $titulo_mayuscula = strtoupper($titulo);
-
-                echo "<a href='biografia.php?usuarioamigo=$usuario'>                                   
-                        <article class='historiaIndividual'>
-                            <p>$nombrePerfil_mayuscula</p>
-                            <img class='fotoconectado' alt='perfilAmigo' src='$imagenPerfil'/>
-                            <h4>$titulo_mayuscula</h4>
-                            <p>$descripcion</p>
-                            <p>$fecha</p>
-                        </article>
-                      </a>";
-            }
-        }
-        else{
-            $historias_amigos = Historia::obtenerMisHistorias($usuario_activo);
-
-            for($i = 0; $i < count($historias_mias); ++$i) {
-
-                $descripcion = $historias_mias[$i]->devolverValor("descripcion");
-
-                $titulo = $historias_mias[$i]->devolverValor("titulo");
-
-                $fecha = $historias_mias[$i]->devolverValor("fecha");
-
-                $titulo_mayuscula = strtoupper($titulo);
+            //Si el usuario que se logueó no es el mismo que el de la biografía actual. //\\Ahorramos llamadas//\\
+            if($usuario_activo != $_SESSION["usuario"]) {
 
                 $usuario = $historias_mias[$i]->devolverValor("usuario");
 
@@ -181,8 +149,21 @@ echo    "<a href='biografia.php?usuarioamigo=$usuario_activo'>
                 $nombrePerfil = $persona->devolverValor("nombre");
 
                 $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
+            }
+            else{
 
-                echo "<a href='biografia.php?usuarioamigo=$usuario'>                                   
+                $usuario = $_SESSION["usuario"];
+
+                $persona = Usuario::obtenerUsuario($usuario);
+
+                $imagenPerfil = $imagen;
+
+                $nombrePerfil = $persona->devolverValor("nombre");
+
+                $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
+            }
+
+            echo "<a href='biografia.php?usuarioamigo=$usuario'>                                   
                     <article class='historiaIndividual'>
                         <p>$nombrePerfil_mayuscula</p>
                         <img class='fotoconectado' alt='perfilAmigo' src='$imagenPerfil'/>
@@ -191,7 +172,6 @@ echo    "<a href='biografia.php?usuarioamigo=$usuario_activo'>
                         <p>$fecha</p>
                     </article>
                   </a>";
-            }
         }
         ?>
     </section>

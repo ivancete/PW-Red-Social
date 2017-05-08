@@ -3,5 +3,5 @@
     define("DB_USUARIO", "root" );
     define("DB_CONTRASENIA", "root" );
     define("TABLA_USUARIOS", "usuarios" );
-    define("TABLA_HISTORIAS", "historias" );
+    define("TABLA_HISTORIAS", "historia" );
 ?>
