@@ -5,7 +5,8 @@ require_once ('usuario.php');
 
 class Historia extends Mysql{
 
-    protected $datos = array("id" => "", "descripcion" => "", "titulo" => "", "usuario" => "", "fecha" => "");
+    protected $datos = array("id" => "", "descripcion" => "", "titulo" => "", "refimagen" => "",
+        "usuario" => "", "fecha" => "");
 
     public static function obtenerMisHistorias($user){
         $connect = parent::connect();
@@ -24,7 +25,7 @@ class Historia extends Mysql{
             $historias = array();
 
             foreach ( $st->fetchAll() as $fila ) {
-                $historias[] = new Usuario($fila);
+                $historias[] = new Historia($fila);
             }
 
             parent::desconect( $connect );
@@ -59,7 +60,7 @@ class Historia extends Mysql{
             $historias = array();
 
             foreach ( $st->fetchAll() as $fila ) {
-                $historias[] = new Usuario($fila);
+                $historias[] = new Historia($fila);
             }
 
             parent::desconect( $connect );
@@ -77,11 +78,11 @@ class Historia extends Mysql{
         }
     }
 
-    public static function insertarHistoria($descripcion, $titulo, $usuario){
+    public static function insertarHistoria($descripcion, $titulo, $refimagen , $usuario){
         $connect = parent::connect();
 
-        $sql = "INSERT INTO historia (descripcion, titulo, usuario) VALUES (
-                '$descripcion', '$titulo', '$usuario')";
+        $sql = "INSERT INTO historia (descripcion, titulo, refimagen , usuario) VALUES (
+                '$descripcion', '$titulo', '$refimagen' , '$usuario')";
 
         try{
             $st = $connect->prepare($sql);

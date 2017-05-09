@@ -138,14 +138,14 @@ session_start();
 
             $titulo_mayuscula = strtoupper($titulo);
 
+            $imagen = $historias_mias[$i]->devolverValor("refimagen");
+
             //Si el usuario que se logueó no es el mismo que el de la biografía actual. //\\Ahorramos llamadas//\\
             if($usuario_activo != $_SESSION["usuario"]) {
 
                 $usuario = $historias_mias[$i]->devolverValor("usuario");
 
                 $persona = Usuario::obtenerUsuario($usuario);
-
-                $imagenPerfil = $persona->devolverValor("fotoperfil");
 
                 $nombrePerfil = $persona->devolverValor("nombre");
 
@@ -157,8 +157,6 @@ session_start();
 
                 $persona = Usuario::obtenerUsuario($usuario);
 
-                $imagenPerfil = $imagen;
-
                 $nombrePerfil = $persona->devolverValor("nombre");
 
                 $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
@@ -167,7 +165,7 @@ session_start();
             echo "<a href='biografia.php?usuarioamigo=$usuario'>                                   
                     <article class='historiaIndividual'>
                         <p>$nombrePerfil_mayuscula</p>
-                        <img class='fotoconectado' alt='perfilAmigo' src='$imagenPerfil'/>
+                        <img class='fotoconectado' alt='perfilAmigo' src='$imagen'/>
                         <h4>$titulo_mayuscula</h4>
                         <p>$descripcion</p>
                         <p>$fecha</p>
