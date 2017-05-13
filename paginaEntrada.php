@@ -39,13 +39,6 @@ session_start();
 
         $usuario_activo = $_SESSION["usuario"];
 
-        //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
-        if(!empty($_GET)) {
-            if ($_GET["usuarioamigo"] == $_SESSION["usuario"]) {
-                $usuario_activo = $_GET["usuarioamigo"];
-            }
-        }
-
         $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
 
         $imagen = $consulta->devolverValor("fotoperfil");
@@ -91,36 +84,24 @@ session_start();
                         <p>$name_mayuscula</p>
                         <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
                     </article>
-                  </a>";
-    }
-    ?>
+                  </a>
+    
 
-</section>
-<section class="contenidoInferior">
-    <input id="mostrar" name="mostrar" type="checkbox">
-    <label class="inputlabel" for="mostrar"></label>
-    <h4 class="cabecera">USUARIOS ACTIVOS</h4>
-    <aside>
-        <?php
+              </section
+              <section class='contenidoInferior'>
+                  <input id='mostrar' name='mostrar' type='checkbox'>
+                  <label class='inputlabel' for='mostrar'></label>
+                  <h4 class='cabecera'>USUARIOS ACTIVOS</h4>
+                  <aside>";
 
-        for($i = 0; $i < count($conectados); ++$i) {
-
-            $usuarioEntrada = $conectados[$i]->devolverValor("usuario");
-
-            $name = $conectados[$i]->devolverValor("nombre");
-
-            $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
-
-            $name_mayuscula = strtoupper($name);
-
-            echo "<a href='portada.php?usuarioamigo=$usuarioEntrada'>
+        echo "<a href='portada.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$name_mayuscula</p>
                     <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
                 </article>
-            </a>";
-        }
-        ?>
+              </a>";
+    }
+    ?>
     </aside>
     <section class="crearEntrada">
         <article>
@@ -137,15 +118,15 @@ session_start();
                     ";
             ?>
             <article class="texto">
-                <form action="entrada.php" method="GET" enctype="multipart/form-data">
+                <form action="entrada.php" method="post" enctype="multipart/form-data">
                     <input size="102" type="text" name="titulo" placeholder="Escriba aquí el título"
-                           maxlength="100" required/>
+                           maxlength="100" required />
                     <br/>
                     <br/>
                     <textarea rows="10" cols="100" name="descripcion" placeholder="Escribe su Comentario"
-                              maxlength="190" required></textarea>
+                              maxlength="190" required/>
                     <br/>
-                    <input class="enviar" type="submit" value="Enviar"/>
+                    <input class="enviar" type="submit" value="Enviar" />
                 </form>
             </article>
         </article>
@@ -153,7 +134,7 @@ session_start();
     <section class="historia">
         <?php
 
-        $historias_mias = Historia::obtenerMisHistorias($_SESSION["usuario"]);
+        $historias_mias = Historia::obtenerHistoriasMiasOrdenadas($_SESSION["usuario"], 0, 6);
 
         for($i = 0; $i < count($historias_mias); ++$i) {
 

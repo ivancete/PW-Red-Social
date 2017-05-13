@@ -4,4 +4,5 @@
     define("DB_CONTRASENIA", "root" );
     define("TABLA_USUARIOS", "usuarios" );
     define("TABLA_HISTORIAS", "historia" );
+    define("TABLA_COMENTARIOS", "comentario" );
 ?>

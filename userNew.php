@@ -19,7 +19,7 @@
   Usuario::insertarUsuario($_GET["correo"], $_GET["registropassword"], $_GET["registronombre"],
       $_GET["registroapellidos"], $_GET["sexo"]);
 
-  header('Location: portada.php');
+  header("Location: portada.php?usuario_activo=$_GET[correo]");
   exit;
 
 

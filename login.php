@@ -5,9 +5,17 @@
 
   if(Usuario::validarUsuario($_GET["user"],$_GET["password"]) ){
 
-      $_SESSION["usuario"] = $_GET["user"];
+      if (empty($_SESSION["conectados"])){
 
-      header('Location: portada.php');
+          $_SESSION["conectados"] = array();
+
+          $_SESSION["conectados"][] = $_GET["user"];
+      }
+      else{
+          $_SESSION["conectados"][] = $_GET["user"];
+      }
+
+      header("Location: portada.php?usuario_activo=$_GET[user]");
       exit;
   }
   else{

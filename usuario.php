@@ -76,6 +76,26 @@ class Usuario extends Mysql{
         }
     }
 
+    public static function modificarUsuario($user, $passwordnuevo, $nombrenuevo, $apellidosnuevos, $sexonuevo){
+        $connect = parent::connect();
+
+        $sql = "UPDATE usuarios SET password = '$passwordnuevo', nombre = '$nombrenuevo', 
+         apellidos = '$apellidosnuevos', sexo = '$sexonuevo' where usuario = '$user'";
+
+        try{
+            $st = $connect->prepare($sql);
+
+            $st->execute();
+
+            parent::desconect($connect);
+
+        }catch (PDOException $e){
+
+            parent::desconect( $connect );
+            die( "Actualización fallida: " . $e->getMessage() );
+        }
+    }
+
     public static function insertarUsuario($user, $password, $nombre, $apellidos, $sexo){
         $connect = parent::connect();
 
