@@ -2,6 +2,10 @@
 require_once ('usuario.php');
 require_once ('historia.php');
 session_start();
+
+if(!isset($_SESSION["usuario"])){
+    header('Location:index.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +22,7 @@ session_start();
 <header>
     <section>
         <?php
-            echo "<a href='portada.php?usuario_activo=$_GET[usuario_activo]'>
+        echo "<a href='portada.php'>
                     <img class='logo' alt='Logo' src='ugrL.png'/>
                  </a>";
         ?>
@@ -26,13 +30,13 @@ session_start();
     </section>
     <section>
         <?php
-            echo "<a href='portada.php?usuario_activo=$_GET[usuario_activo]'>
+            echo "<a href='portada.php'>
                     <p id='nombre'>VisitsBook</p>
                   </a>";
         ?>
     </section>
     <section>
-        <form action='salir.php' method='post'>
+        <form action='salir.php' method='get'>
             <input class='botonSalir' type='submit' name='salir' value='Salir'/>
         </form>
         <?php
@@ -44,29 +48,27 @@ session_start();
         else
             $numerosig = 0;
 
-        $usuario_activo = $_GET["usuario_activo"];
-
-        $consulta = Usuario::obtenerUsuario($usuario_activo);
+        $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
 
         $imagen = $consulta->devolverValor("fotoperfil");
 
-            echo "<a href='paginaEntrada.php?usuario_activo=$usuario_activo'>
-                        <img class='fotoPerfil' alt='fotoPerfil' src='$imagen'/>
-                  </a>";
+        echo "<a href='paginaEntrada.php'>
+                <img class='fotoPerfil' alt='fotoPerfil' src='$imagen'/>
+              </a>";
         ?>
     </section>
 </header>
 <section id="botonera">
 <?php
-echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario_activo'>
+echo    "<a href='biografia.php'>
             Biografía
         </a>
             -
-        <a href='fotos.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario_activo'>
+        <a href='fotos.php'>
             Fotos
         </a>
             -
-        <a href='informacion.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario_activo'>
+        <a href='informacion.php'>
             Información
         </a>";
 ?>
@@ -74,7 +76,7 @@ echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usu
 <section class="scroll">
     <?php
 
-    $conectados = Usuario::devolverAmigos();
+    $conectados = Usuario::devolverAmigos($_SESSION["usuario"]);
 
     for($i = 0; $i < count($conectados); ++$i) {
 
@@ -86,7 +88,7 @@ echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usu
 
         $name_mayuscula = strtoupper($name);
 
-        echo "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario'>
+        echo "<a href='biografia.php?usuarioamigo=$usuario'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
                         <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
@@ -115,7 +117,7 @@ echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usu
 
         $imagenfriend = $datos->devolverValor("fotoperfil");
 
-        echo "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario'>
+        echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$nombre</p>
                     <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
@@ -127,7 +129,7 @@ echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usu
     <section class="historia">
         <?php
 
-            $historias_amigos = Historia::obtenerHistoriasAmigos($usuario_activo);
+            $historias_amigos = Historia::obtenerHistoriasAmigos($_SESSION["usuario"]);
 
             for($i = 0; $i < count($historias_amigos); ++$i) {
 
@@ -151,7 +153,7 @@ echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usu
 
                 $titulo_mayuscula = strtoupper($titulo);
 
-                echo "<a href='detalleHistoria.php?historia=$idhistoria&usuario_activo=$usuario_activo&usuarioamigo=$usuario'>                                   
+                echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuario'>                                   
                         <article class='historiaIndividual'>
                             <p>$nombrePerfil_mayuscula</p>
                             <img class='fotoconectado' alt='perfilAmigo' src='$imagenPerfil'/>
@@ -172,18 +174,18 @@ echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usu
         if ($auxNumSigIzq < 0)
             $auxNumSigIzq = 0;
 
-        echo "<a href='portada.php?usuario_activo=$usuario_activo&numerosig=$auxNumSigIzq&usuarioamigo=$usuario_activo'>
+        echo "<a href='portada.php?numerosig=$auxNumSigIzq'>
                     <img class='flecha' alt='flechaIzq' src='flecha_izq.png'/>
               </a>";
 
         $auxNumSigDer = $numerosig + 9;
 
-        $historias_amigos = Historia::obtenerHistoriasAmigosOrdenadas($usuario_activo, $auxNumSigDer,9);
+        $historias_amigos = Historia::obtenerHistoriasAmigosOrdenadas($_SESSION["usuario"], $auxNumSigDer,9);
 
         if(!$historias_amigos)
             $auxNumSigDer = $numerosig;
 
-        echo "<a href='portada.php?usuario_activo=$usuario_activo&numerosig=$auxNumSigDer&usuarioamigo=$usuario_activo'>
+        echo "<a href='portada.php?numerosig=$auxNumSigDer'>
                      <img class='flecha' alt='flechaDch' src='flecha_der.png' />
               </a>";
     ?>

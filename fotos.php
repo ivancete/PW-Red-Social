@@ -2,6 +2,10 @@
 require_once ('usuario.php');
 require_once ('historia.php');
 session_start();
+
+if(!isset($_SESSION["usuario"])) {
+    header('Location:index.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +22,7 @@ session_start();
 <header>
     <section>
         <?php
-        echo "<a href='portada.php?usuario_activo=$_GET[usuario_activo]'>
+        echo "<a href='portada.php'>
                     <img class='logo' alt='Logo' src='ugrL.png'/>
                  </a>";
         ?>
@@ -26,13 +30,13 @@ session_start();
     </section>
     <section>
         <?php
-        echo "<a href='portada.php?usuario_activo=$_GET[usuario_activo]'>
+        echo "<a href='portada.php'>
                     <p id='nombre'>VisitsBook</p>
                   </a>";
         ?>
     </section>
     <section>
-        <form action='salir.php' method='post'>
+        <form action='salir.php' method='get'>
             <input class='botonSalir' type='submit' name='salir' value='Salir'/>
         </form>
         <?php
@@ -43,17 +47,28 @@ session_start();
         else
             $numerosig = 0;
 
-        //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
-        if ($_GET["usuario_activo"] != $_GET["usuarioamigo"])
-            $usuario_mostrar = $_GET["usuarioamigo"];
-        else
-            $usuario_mostrar = $_GET["usuario_activo"];
+        $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
 
-        $consulta = Usuario::obtenerUsuario($_GET["usuario_activo"]);
+        if (isset($_GET["usuarioamigo"])) {
+            //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
+            if ($_SESSION["usuario"] != $_GET["usuarioamigo"]) {
+
+                $usuario_mostrar = $_GET["usuarioamigo"];
+
+            }
+            else {
+                $usuario_mostrar = $_SESSION["usuario"];
+
+            }
+        }
+        else {
+            $usuario_mostrar = $_SESSION["usuario"];
+
+        }
 
         $imagen = $consulta->devolverValor("fotoperfil");
 
-        echo "<a href='paginaEntrada.php?usuario_activo=$_GET[usuario_activo]'>
+        echo "<a href='paginaEntrada.php'>
                         <img class='fotoPerfil' alt='fotoPerfil' src='$imagen'/>
                   </a>";
         ?>
@@ -61,15 +76,15 @@ session_start();
 </header>
 <section id="botonera">
     <?php
-    echo    "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario_mostrar'>
+    echo    "<a href='biografia.php?usuarioamigo=$usuario_mostrar'>
             Biografía
         </a>
             -
-        <a href='fotos.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario_mostrar'>
+        <a href='fotos.php?usuarioamigo=$usuario_mostrar'>
             Fotos
         </a>
             -
-        <a href='informacion.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario_mostrar'>
+        <a href='informacion.php?usuarioamigo=$usuario_mostrar'>
             Información
         </a>";
     ?>
@@ -77,7 +92,7 @@ session_start();
 <section class="scroll">
     <?php
 
-    $conectados = Usuario::devolverAmigos();
+    $conectados = Usuario::devolverAmigos($_SESSION["usuario"]);
 
     for($i = 0; $i < count($conectados); ++$i) {
 
@@ -89,7 +104,7 @@ session_start();
 
         $name_mayuscula = strtoupper($name);
 
-        echo "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario'>
+        echo "<a href='biografia.php?usuarioamigo=$usuario'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
                         <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
@@ -97,7 +112,7 @@ session_start();
                   </a>";
     }
     ?>
-</section>
+</section
 <section class="contenidoInferior">
     <input id="mostrar" name="mostrar" type="checkbox">
     <label class="inputlabel" for="mostrar"></label>
@@ -112,13 +127,13 @@ session_start();
 
             $datos = Usuario::obtenerUsuario($usuario);
 
-            $nombre = $datos->devolverValor("nombre");
+            $name = $datos->devolverValor("nombre");
 
-            $nombre = strtoupper($nombre);
+            $nombre = strtoupper($name);
 
             $imagenfriend = $datos->devolverValor("fotoperfil");
 
-            echo "<a href='biografia.php?usuario_activo=$usuario_activo&usuarioamigo=$usuario'>
+            echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$nombre</p>
                     <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
@@ -130,7 +145,7 @@ session_start();
     <section class="historia">
         <?php
 
-        $historias_mias = Historia::obtenerHistoriasMiasOrdenadas($usuario_activo, $numerosig, 9);
+        $historias_mias = Historia::obtenerHistoriasMiasOrdenadas($usuario_mostrar, $numerosig, 9);
 
         for($i = 0; $i < count($historias_mias); ++$i) {
 
@@ -142,10 +157,10 @@ session_start();
 
             $titulo_mayuscula = strtoupper($titulo);
 
-            $idhistoria = $historias_mias[$i]->devolverValor("id");
+            $idhistoria = $historias_mias[$i]->devolverValor("idhistoria");
 
             //Si el usuario que se logueó no es el mismo que el de la biografía actual. //\\Ahorramos llamadas//\\
-            if($usuario_activo != $_GET["usuario_activo"]) {
+            if($usuario_mostrar != $_GET["usuario_activo"]) {
 
                 $usuario = $historias_mias[$i]->devolverValor("usuario");
 
@@ -170,7 +185,7 @@ session_start();
                 $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
             }
 
-            echo "<a href='detalleHistoria.php?historia=$idhistoria&usuario_activo=$usuario_activo&usuarioamigo=$usuario'>                                   
+            echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuario'>                                   
                     <article class='historiaIndividual'>
                         <p>$nombrePerfil_mayuscula</p>
                         <img class='fotoconectado' alt='Imagen Entrada' src='$imagenPerfil'/>

@@ -2,23 +2,47 @@
 require_once ('usuario.php');
 require_once ('historia.php');
 session_start();
+
+if(!isset($_SESSION["usuario"])) {
+    header('Location:index.php');
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8"/>
-    <title>Portada Red Social</title>
+    <title>Creación Entrada</title>
     <link rel="stylesheet"  href="diseno.css"/>
-    <link rel="stylesheet"  href="dS.css" media="(max-width: 480px)"/>
-    <meta charset="UTF-8" name="viewport" content="width=device−width, initial−scale=1.0, url=portada.html"
-          http-equiv="refresh"/>
+    <!--Validación de la creación de una entrada -->
+    <script>
+        function validarEntrada() {
+            var x = document.forms["entrada"]["titulo"].value;
+            var y = document.forms["entrada"]["descripcion"].value;
+            if (x == "") {
+                alert("No se ha introducido título.");
+                return false;
+            }
+            else if (x.length > 100) {
+                alert("Se han introducido más de 100 caracteres en el título.");
+                return false;
+            }
+            else if (y == "") {
+                alert("No se ha introducido descripción.");
+                return false;
+            }
+            else if (x.length > 190) {
+                alert("Se han introducido más de 190 caracteres en la descripción.");
+                return false;
+            }
+        }
+    </script>
 </head>
 <body>
 <header>
     <section>
         <?php
-        echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
+        echo "<a href='portada.php'>
                     <img class='logo' alt='Logo' src='ugrL.png'/>
                  </a>";
         ?>
@@ -26,18 +50,23 @@ session_start();
     </section>
     <section>
         <?php
-        echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
+        echo "<a href='portada.php'>
                     <p id='nombre'>VisitsBook</p>
                   </a>";
         ?>
     </section>
     <section>
-        <form action='salir.php' method='post'>
+        <form action='salir.php' method='get'>
             <input class='botonSalir' type='submit' name='salir' value='Salir'/>
         </form>
         <?php
 
-        $usuario_activo = $_SESSION["usuario"];
+        if(isset($_GET["numerosig"])){
+            $numerosig = $_GET["numerosig"];
+        }
+        else
+            $numerosig = 0;
+
 
         $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
 
@@ -51,15 +80,15 @@ session_start();
 </header>
 <section id="botonera">
     <?php
-    echo    "<a href='biografia.php?usuarioamigo=$usuario_activo'>
+    echo    "<a href='biografia.php'>
             Biografía
         </a>
             -
-        <a href='fotos.php?usuarioamigo=$usuario_activo'>
+        <a href='fotos.php'>
             Fotos
         </a>
             -
-        <a href='informacion.php?usuarioamigo=$usuario_activo'>
+        <a href='informacion.php'>
             Información
         </a>";
     ?>
@@ -67,7 +96,7 @@ session_start();
 <section class="scroll">
     <?php
 
-    $conectados = Usuario::devolverAmigos();
+    $conectados = Usuario::devolverAmigos($_SESSION["usuario"]);
 
     for($i = 0; $i < count($conectados); ++$i) {
 
@@ -79,33 +108,49 @@ session_start();
 
         $name_mayuscula = strtoupper($name);
 
-        echo "<a href='portada.php?usuarioamigo=$usuario'>
+        echo "<a href='biografia.php?usuarioamigo=$name'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
                         <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
                     </article>
-                  </a>
-    
+                  </a>";
+    }
+    ?>
+</section
+<section class="contenidoInferior">
+    <input id="mostrar" name="mostrar" type="checkbox">
+    <label class="inputlabel" for="mostrar"></label>
+    <h4 class="cabecera">USUARIOS ACTIVOS</h4>
+    <aside>
 
-              </section
-              <section class='contenidoInferior'>
-                  <input id='mostrar' name='mostrar' type='checkbox'>
-                  <label class='inputlabel' for='mostrar'></label>
-                  <h4 class='cabecera'>USUARIOS ACTIVOS</h4>
-                  <aside>";
+        <?php
 
-        echo "<a href='portada.php?usuarioamigo=$usuario'>
+        for ($i = 0; $i < count($_SESSION["conectados"]); ++$i){
+
+            $usuario = $_SESSION["conectados"][$i];
+
+            $datos = Usuario::obtenerUsuario($usuario);
+
+            $name = $datos->devolverValor("nombre");
+
+            $nombre = strtoupper($name);
+
+            $imagenfriend = $datos->devolverValor("fotoperfil");
+
+            echo "<a href='biografia.php?usuarioamigo=$name'>
                 <article>
-                    <p class='textoConectado'>$name_mayuscula</p>
+                    <p class='textoConectado'>$nombre</p>
                     <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
                 </article>
               </a>";
-    }
-    ?>
+        }
+        ?>
     </aside>
     <section class="crearEntrada">
         <article>
             <?php
+
+            $_SESSION["creador_historia"] = $_SESSION["usuario"];
 
             $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
 
@@ -114,21 +159,19 @@ session_start();
             $nombre = strtoupper($nombre);
 
             echo "  <p>$nombre</p>
-                    <img class='imagenComentario' alt='imagen perfil' src='$imagen'/>
-                    ";
+                    <img class='imagenComentario' alt='imagen perfil' src='$imagen'/>";
             ?>
             <article class="texto">
-                <form action="entrada.php" method="post" enctype="multipart/form-data">
-                    <input size="102" type="text" name="titulo" placeholder="Escriba aquí el título"
-                           maxlength="100" required />
+                <form name="entrada" action="entrada.php" method="get" onsubmit="return validarEntrada()">
+                    <input size="102" type="text" name="titulo" placeholder="Escriba aquí el título"/>
                     <br/>
                     <br/>
-                    <textarea rows="10" cols="100" name="descripcion" placeholder="Escribe su Comentario"
-                              maxlength="190" required/>
+                    <textarea rows="10" cols="100" name="descripcion" placeholder="Escribe su Comentario"></textarea>
                     <br/>
                     <input class="enviar" type="submit" value="Enviar" />
                 </form>
             </article>
+
         </article>
     </section>
     <section class="historia">
@@ -146,7 +189,7 @@ session_start();
 
             $titulo_mayuscula = strtoupper($titulo);
 
-            $usuario = $_SESSION["usuario"];
+            $usuario = $_GET["usuario_activo"];
 
             $persona = Usuario::obtenerUsuario($usuario);
 
@@ -156,7 +199,7 @@ session_start();
 
             $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
 
-            echo "<a href='biografia.php?usuarioamigo=$usuario'>                                   
+            echo "<a href='biografia.php'>                                   
                     <article class='historiaIndividual'>
                         <p>$nombrePerfil_mayuscula</p>
                         <img class='fotoconectado' alt='perfil' src='$imagen'/>

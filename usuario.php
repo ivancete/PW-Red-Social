@@ -5,7 +5,7 @@ require_once ('mysql.php');
 class Usuario extends Mysql{
 
     protected $datos = array("usuario" => "", "password" => "", "nombre" => "", "apellidos" => "", "sexo" => "",
-        "fotoperfil"=> "");
+        "fotoperfil" => "", "telefono" => "", "nacimiento" => "");
 
     public static function obtenerUsuario($user){
         $connect = parent::connect();
@@ -76,11 +76,10 @@ class Usuario extends Mysql{
         }
     }
 
-    public static function modificarUsuario($user, $passwordnuevo, $nombrenuevo, $apellidosnuevos, $sexonuevo){
+    public static function modificarNombre($user, $nombrenuevo){
         $connect = parent::connect();
 
-        $sql = "UPDATE usuarios SET password = '$passwordnuevo', nombre = '$nombrenuevo', 
-         apellidos = '$apellidosnuevos', sexo = '$sexonuevo' where usuario = '$user'";
+        $sql = "UPDATE usuarios SET nombre = '$nombrenuevo' where usuario = '$user' ";
 
         try{
             $st = $connect->prepare($sql);
@@ -96,13 +95,13 @@ class Usuario extends Mysql{
         }
     }
 
-    public static function insertarUsuario($user, $password, $nombre, $apellidos, $sexo){
+    public static function insertarUsuario($user, $password, $nombre, $apellidos, $sexo, $telefono, $nacimiento){
         $connect = parent::connect();
 
         $passwordEncrypted = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO usuarios (usuario, password, nombre, apellidos, sexo) VALUES (
-                '$user', '$passwordEncrypted', '$nombre', '$apellidos', '$sexo')";
+        $sql = "INSERT INTO usuario (usuario, password, nombre, apellidos, sexo, telefono, nacimiento) VALUES (
+                '$user', '$passwordEncrypted', '$nombre', '$apellidos', '$sexo', $telefono, '$nacimiento')";
 
         try{
             $st = $connect->prepare($sql);
@@ -118,14 +117,16 @@ class Usuario extends Mysql{
         }
     }
 
-    public static function devolverAmigos(){
+    public static function devolverAmigos($user){
 
         $connect = parent::connect();
 
-        $sql = "SELECT * FROM " .TABLA_USUARIOS;
+        $sql = "SELECT * FROM " .TABLA_USUARIOS. " WHERE usuario != :user";
 
         try {
             $st = $connect->prepare( $sql );
+
+            $st->bindValue( ":user", $user, PDO::PARAM_STR );
 
             $st->execute();
 

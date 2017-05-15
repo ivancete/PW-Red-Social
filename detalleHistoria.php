@@ -3,6 +3,10 @@ require_once ('usuario.php');
 require_once ('historia.php');
 require_once ('comentario.php');
 session_start();
+
+if(!isset($_SESSION["usuario"])) {
+    header('Location:index.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -11,12 +15,27 @@ session_start();
     <meta charset="utf-8"/>
     <title>Detalle entrada</title>
     <link rel="stylesheet" type="text/css" href="diseno.css"/>
+
+    <!--Validación de la creación de un comentario -->
+    <script>
+        function validarComentario() {
+            var x = document.forms["comentario"]["areaComentario"].value;
+            if (x == "") {
+                alert("No se ha introducido comentario.");
+                return false;
+            }
+            if (x.length > 190) {
+                alert("Se han introducido más de 190 caracteres en el comentario.");
+                return false;
+            }
+        }
+    </script>
 </head>
 <body>
 <header>
     <section>
         <?php
-        echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
+        echo "<a href='portada.php'>
                     <img class='logo' alt='Logo' src='ugrL.png'/>
                  </a>";
         ?>
@@ -24,25 +43,40 @@ session_start();
     </section>
     <section>
         <?php
-        echo "<a href='portada.php?usuarioamigo=$_SESSION[usuario]'>
+        echo "<a href='portada.php'>
                     <p id='nombre'>VisitsBook</p>
                   </a>";
         ?>
     </section>
     <section>
-        <form action='salir.php' method='post'>
+        <form action='salir.php' method='get'>
             <input class='botonSalir' type='submit' name='salir' value='Salir'/>
         </form>
         <?php
 
-        //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
-        if(!empty($_GET)) {
-            if ($_GET["usuarioamigo"] == $_SESSION["usuario"]) {
-                $usuario_amigo = $_GET["usuarioamigo"];
-            }
+        if(isset($_GET["numerosig"])){
+            $numerosig = $_GET["numerosig"];
         }
+        else
+            $numerosig = 0;
 
         $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
+
+        //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
+        if ($_SESSION["usuario"] != $_GET["usuarioamigo"]) {
+            $usuario_mostrar = $_GET["usuarioamigo"];
+
+            $consulta_amigo = Usuario::obtenerUsuario($_GET["usuarioamigo"]);
+
+            $nombre_usuario = $consulta_amigo->devolverValor("nombre");
+        }
+        else {
+            $usuario_mostrar = $_SESSION["usuario"];
+
+            $nombre_usuario = $consulta->devolverValor("nombre");
+        }
+
+
 
         $imagen = $consulta->devolverValor("fotoperfil");
 
@@ -54,22 +88,15 @@ session_start();
 </header>
 <section id="botonera">
     <?php
-
-    $usuario = $_SESSION["usuario"];
-
-    if($usuario_amigo != $_SESSION["usuario"]){
-        $usuario = $_GET["usuarioamigo"];
-    }
-
-    echo    "<a href='biografia.php?usuarioamigo=$usuario'>
+    echo    "<a href='biografia.php?usuarioamigo=$nombre_usuario'>
             Biografía
         </a>
             -
-        <a href='fotos.php?usuarioamigo=$usuario'>
+        <a href='fotos.php?usuarioamigo=$nombre_usuario'>
             Fotos
         </a>
             -
-        <a href='informacion.php?usuarioamigo=$usuario'>
+        <a href='informacion.php?usuarioamigo=$nombre_usuario'>
             Información
         </a>";
     ?>
@@ -77,7 +104,7 @@ session_start();
 <section class="scroll">
     <?php
 
-    $conectados = Usuario::devolverAmigos();
+    $conectados = Usuario::devolverAmigos($_SESSION["usuario"]);
 
     for($i = 0; $i < count($conectados); ++$i) {
 
@@ -89,29 +116,43 @@ session_start();
 
         $name_mayuscula = strtoupper($name);
 
-        echo "<a href='portada.php?usuarioamigo=$usuario'>
+        echo "<a href='biografia.php?usuarioamigo=$name'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
                         <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
                     </article>
-                  </a>
-    
+                  </a>";
+    }
+    ?>
+</section
+<section class="contenidoInferior">
+    <input id="mostrar" name="mostrar" type="checkbox">
+    <label class="inputlabel" for="mostrar"></label>
+    <h4 class="cabecera">USUARIOS ACTIVOS</h4>
+    <aside>
 
-              </section
-              <section class='contenidoInferior'>
-                  <input id='mostrar' name='mostrar' type='checkbox'>
-                  <label class='inputlabel' for='mostrar'></label>
-                  <h4 class='cabecera'>USUARIOS ACTIVOS</h4>
-                  <aside>";
+        <?php
 
-        echo "<a href='portada.php?usuarioamigo=$usuario'>
+        for ($i = 0; $i < count($_SESSION["conectados"]); ++$i){
+
+            $usuario = $_SESSION["conectados"][$i];
+
+            $datos = Usuario::obtenerUsuario($usuario);
+
+            $name = $datos->devolverValor("nombre");
+
+            $nombre = strtoupper($name);
+
+            $imagenfriend = $datos->devolverValor("fotoperfil");
+
+            echo "<a href='biografia.php?usuarioamigo=$name'>
                 <article>
-                    <p class='textoConectado'>$name_mayuscula</p>
+                    <p class='textoConectado'>$nombre</p>
                     <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
                 </article>
               </a>";
-    }
-    ?>
+        }
+        ?>
     </aside>
     <section class="entrada">
         <?php
@@ -188,14 +229,16 @@ session_start();
         echo "<section class='entradaPropia'>
             <article  class='comentario'>
                 <img class='imagenComentario' alt='Perfil' src='$imagen'/>
-                <p>$nombre</p>
-                <form action='procesarComentario.php' method='post'>
+                <p>$nombre</p>";
+        ?>
+                <form name='comentario' action='procesarComentario.php' method='get' onsubmit='return validarComentario()'>
+                    <input/>
                     <textarea id = 'areaComentario' name='areaComentario' rows='6' cols='80' placeholder='Escriba su Comentario'></textarea>
                     <input id = 'areaBoton' type='submit' name='enviar' value='Publicar'/>
                 </form>
             </article>
-        </section>";
-    ?>
+        </section>
+
 </section>
 <footer>
     <h4>

@@ -4,9 +4,10 @@ require_once ('historia.php');
 
 session_start();
 
-if(!empty($_POST["registronombre"]) && !empty($_POST["registroapellidos"]) &&
-    !empty($_POST["registropasswordantiguo"]) && !empty($_POST["registropassword"])
-    && !empty($_POST["registropasswordrepeticion"]) && !empty($_POST["sexo"])){
+if(!isset($_POST["registronombre"]) && !isset($_POST["registroapellidos"]) &&
+    !isset($_POST["registropasswordantiguo"]) && !isset($_POST["registropassword"])
+    && !isset($_POST["registropasswordrepeticion"]) && !isset($_POST["sexo"]) && !isset($_POST["registronacimiento"])
+    && !isset($_POST["registrotelefono"])){
 
     if(Usuario::validarUsuario($_SESSION["usuario"],$_POST["registropasswordantiguo"]) &&
         $_POST["registropasswordrepeticion"] == $_POST["registropassword"]){
