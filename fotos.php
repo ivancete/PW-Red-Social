@@ -47,7 +47,7 @@ if(!isset($_SESSION["usuario"])) {
         else
             $numerosig = 0;
 
-        $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
+        $usuario_mostrar = $_SESSION["usuario"];
 
         if (isset($_GET["usuarioamigo"])) {
             //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
@@ -56,20 +56,10 @@ if(!isset($_SESSION["usuario"])) {
                 $usuario_mostrar = $_GET["usuarioamigo"];
 
             }
-            else {
-                $usuario_mostrar = $_SESSION["usuario"];
-
-            }
         }
-        else {
-            $usuario_mostrar = $_SESSION["usuario"];
-
-        }
-
-        $imagen = $consulta->devolverValor("fotoperfil");
 
         echo "<a href='paginaEntrada.php'>
-                        <img class='fotoPerfil' alt='fotoPerfil' src='$imagen'/>
+                        <img class='fotoPerfil' alt='fotoPerfil' src='$_SESSION[imagen]'/>
                   </a>";
         ?>
     </section>
@@ -121,17 +111,17 @@ if(!isset($_SESSION["usuario"])) {
 
         <?php
 
-        for ($i = 0; $i < count($_SESSION["conectados"]); ++$i){
+        $conectados = Usuario::devolverConectados();
 
-            $usuario = $_SESSION["conectados"][$i];
+        for ($i = 0; $i < count($conectados); ++$i){
 
-            $datos = Usuario::obtenerUsuario($usuario);
+            $usuario = $conectados[$i]->devolverValor("usuario");
 
-            $name = $datos->devolverValor("nombre");
+            $nombre = $conectados[$i]->devolverValor("nombre");
 
-            $nombre = strtoupper($name);
+            $nombre = strtoupper($nombre);
 
-            $imagenfriend = $datos->devolverValor("fotoperfil");
+            $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
 
             echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
@@ -147,6 +137,12 @@ if(!isset($_SESSION["usuario"])) {
 
         $historias_mias = Historia::obtenerHistoriasMiasOrdenadas($usuario_mostrar, $numerosig, 9);
 
+        $flechas = true;
+
+        if(count($historias_mias) < 9)
+            $flechas = false;
+
+
         for($i = 0; $i < count($historias_mias); ++$i) {
 
             $descripcion = $historias_mias[$i]->devolverValor("descripcion");
@@ -160,7 +156,7 @@ if(!isset($_SESSION["usuario"])) {
             $idhistoria = $historias_mias[$i]->devolverValor("idhistoria");
 
             //Si el usuario que se logueó no es el mismo que el de la biografía actual. //\\Ahorramos llamadas//\\
-            if($usuario_mostrar != $_GET["usuario_activo"]) {
+            if($usuario_mostrar != $_SESSION["usuario"]) {
 
                 $usuario = $historias_mias[$i]->devolverValor("usuario");
 
@@ -174,18 +170,14 @@ if(!isset($_SESSION["usuario"])) {
             }
             else{
 
-                $usuario = $_GET["usuario_activo"];
+                $usuario = $_SESSION["usuario"];
 
-                $persona = Usuario::obtenerUsuario($usuario);
+                $imagenPerfil = $_SESSION["imagen"];
 
-                $imagenPerfil = $imagen;
-
-                $nombrePerfil = $persona->devolverValor("nombre");
-
-                $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
+                $nombrePerfil_mayuscula = strtoupper($_SESSION["nombre"]);
             }
 
-            echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuario'>                                   
+            echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuario_mostrar'>
                     <article class='historiaIndividual'>
                         <p>$nombrePerfil_mayuscula</p>
                         <img class='fotoconectado' alt='Imagen Entrada' src='$imagenPerfil'/>
@@ -201,25 +193,28 @@ if(!isset($_SESSION["usuario"])) {
 <section>
     <?php
 
-    $auxNumSigIzq = $numerosig - 9;
+    if($flechas) {
 
-    if ($auxNumSigIzq < 0)
-        $auxNumSigIzq = 0;
+        $auxNumSigIzq = $numerosig - 9;
 
-    echo "<a href='portada.php?numerosig=$auxNumSigIzq&usuarioamigo=$usuario_mostrar'>
+        if ($auxNumSigIzq < 0)
+            $auxNumSigIzq = 0;
+
+        echo "<a href='portada.php?numerosig=$auxNumSigIzq&usuarioamigo=$usuario_mostrar'>
                     <img class='flecha' alt='flechaIzq' src='flecha_izq.png'/>
               </a>";
 
-    $auxNumSigDer = $numerosig + 9;
+        $auxNumSigDer = $numerosig + 9;
 
-    $historias_amigos = Historia::obtenerHistoriasMiasOrdenadas($usuario_mostrar, $auxNumSigDer,9);
+        $historias_amigos = Historia::obtenerHistoriasMiasOrdenadas($usuario_mostrar, $auxNumSigDer, 9);
 
-    if(!$historias_amigos)
-        $auxNumSigDer = $numerosig;
+        if (!$historias_amigos)
+            $auxNumSigDer = $numerosig;
 
-    echo "<a href='portada.php?numerosig=$auxNumSigDer&usuarioamigo=$usuario_mostrar'>
+        echo "<a href='portada.php?numerosig=$auxNumSigDer&usuarioamigo=$usuario_mostrar'>
                      <img class='flecha' alt='flechaDch' src='flecha_der.png' />
               </a>";
+    }
     ?>
 </section>
 <footer>

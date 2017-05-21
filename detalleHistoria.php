@@ -60,43 +60,34 @@ if(!isset($_SESSION["usuario"])) {
         else
             $numerosig = 0;
 
-        $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
+        $usuario_mostrar = $_SESSION["usuario"];
 
-        //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
-        if ($_SESSION["usuario"] != $_GET["usuarioamigo"]) {
-            $usuario_mostrar = $_GET["usuarioamigo"];
+        if (isset($_GET["usuarioamigo"])) {
+            //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
+            if ($_SESSION["usuario"] != $_GET["usuarioamigo"]) {
 
-            $consulta_amigo = Usuario::obtenerUsuario($_GET["usuarioamigo"]);
+                $usuario_mostrar = $_GET["usuarioamigo"];
 
-            $nombre_usuario = $consulta_amigo->devolverValor("nombre");
+            }
         }
-        else {
-            $usuario_mostrar = $_SESSION["usuario"];
-
-            $nombre_usuario = $consulta->devolverValor("nombre");
-        }
-
-
-
-        $imagen = $consulta->devolverValor("fotoperfil");
 
         echo "<a href='paginaEntrada.php'>
-                        <img class='fotoPerfil' alt='fotoPerfil' src='$imagen'/>
+                        <img class='fotoPerfil' alt='fotoPerfil' src='$_SESSION[imagen]'/>
                   </a>";
         ?>
     </section>
 </header>
 <section id="botonera">
     <?php
-    echo    "<a href='biografia.php?usuarioamigo=$nombre_usuario'>
+    echo    "<a href='biografia.php?usuarioamigo=$usuario_mostrar'>
             Biografía
         </a>
             -
-        <a href='fotos.php?usuarioamigo=$nombre_usuario'>
+        <a href='fotos.php?usuarioamigo=$usuario_mostrar'>
             Fotos
         </a>
             -
-        <a href='informacion.php?usuarioamigo=$nombre_usuario'>
+        <a href='informacion.php?usuarioamigo=$usuario_mostrar'>
             Información
         </a>";
     ?>
@@ -116,7 +107,7 @@ if(!isset($_SESSION["usuario"])) {
 
         $name_mayuscula = strtoupper($name);
 
-        echo "<a href='biografia.php?usuarioamigo=$name'>
+        echo "<a href='biografia.php?usuarioamigo=$usuario'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
                         <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
@@ -133,19 +124,19 @@ if(!isset($_SESSION["usuario"])) {
 
         <?php
 
-        for ($i = 0; $i < count($_SESSION["conectados"]); ++$i){
+        $conectados = Usuario::devolverConectados();
 
-            $usuario = $_SESSION["conectados"][$i];
+        for ($i = 0; $i < count($conectados); ++$i){
 
-            $datos = Usuario::obtenerUsuario($usuario);
+            $usuario = $conectados[$i]->devolverValor("usuario");
 
-            $name = $datos->devolverValor("nombre");
+            $nombre = $conectados[$i]->devolverValor("nombre");
 
-            $nombre = strtoupper($name);
+            $nombre = strtoupper($nombre);
 
-            $imagenfriend = $datos->devolverValor("fotoperfil");
+            $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
 
-            echo "<a href='biografia.php?usuarioamigo=$name'>
+            echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$nombre</p>
                     <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
@@ -171,11 +162,11 @@ if(!isset($_SESSION["usuario"])) {
 
             $descripcion = $historia->devolverValor("descripcion");
 
-            $nombre = strtoupper($name);
+            $nombre = strtoupper($nombre);
 
             echo "<article class='comentario'>
                     <p>$nombre</p>
-                    <img class='imagenComentario' alt='Perfil' src='$imagenUsuario'/>
+                    <img class='imagenComentarioOtra' alt='Perfil' src='$imagenUsuario'/>
                     </article>
                   <article class='comentario'>
                   <h4>$titulo</h4>
@@ -204,11 +195,11 @@ if(!isset($_SESSION["usuario"])) {
 
                 $imagen = $usuarioComentario->devolverValor("fotoperfil");
 
-                $nombre = strtoupper($nombre);
+                $nombre = strtoupper($usuarioComentario->devolverValor("nombre"));
 
                 echo "<article class='comentario'>
                           <p>$nombre - $fecha</p>
-                          <img class='imagenComentario' alt='Perfil' src='$imagen'/>
+                          <img class='imagenComentarioOtra' alt='Perfil' src='$imagen'/>
                           <p>$descripcion</p>
                       </article>";
             }
@@ -216,23 +207,16 @@ if(!isset($_SESSION["usuario"])) {
              echo "</section>";
         }
 
-        $usuario = Usuario::obtenerUsuario($_SESSION["usuario"]);
-
-        $imagen = $usuario->devolverValor("fotoperfil");
-
-        $nombre = $usuario->devolverValor("nombre");
-
-        $nombre = strtoupper($nombre);
+        $nombre = strtoupper($_SESSION["nombre"]);
 
         $_SESSION["idhistoria"] = $_GET["historia"];
 
         echo "<section class='entradaPropia'>
             <article  class='comentario'>
-                <img class='imagenComentario' alt='Perfil' src='$imagen'/>
+                <img class='imagenComentarioOtra' alt='Perfil' src='$_SESSION[imagen]'/>
                 <p>$nombre</p>";
         ?>
                 <form name='comentario' action='procesarComentario.php' method='get' onsubmit='return validarComentario()'>
-                    <input/>
                     <textarea id = 'areaComentario' name='areaComentario' rows='6' cols='80' placeholder='Escriba su Comentario'></textarea>
                     <input id = 'areaBoton' type='submit' name='enviar' value='Publicar'/>
                 </form>

@@ -13,10 +13,9 @@ if (!empty($_GET["areaComentario"])){
 
     $usuariocomentario = $_SESSION["usuario"];
 
-Comentario::insertarComentario($idhistoria, $usuariohistoria,
-                                $usuariocomentario,$_GET["areaComentario"]);
+    Comentario::insertarComentario($idhistoria, $usuariohistoria, $usuariocomentario,$_GET["areaComentario"]);
 
-    header("Location: detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuariocomentario");
+    header("Location: detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuariohistoria");
     exit;
 }
 else

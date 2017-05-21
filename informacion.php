@@ -16,45 +16,26 @@ if(!isset($_SESSION["usuario"])) {
     <link rel="stylesheet"  href="diseno.css"/>
     <script>
         function validarNombre() {
-            var x = document.forms["cambiarDatos"]["registronombre"].value;
+            var x = document.forms["cambiarNombre"]["registronombre"].value;
+            var y = document.forms["cambiarNombre"]["registroapellidos"].value;
             if (x == "") {
                 alert("No se ha introducido el nombre nuevo.");
                 return false;
             }
-        }
-
-        function validarApellido() {
-            var x = document.forms["cambiarDatos"]["registroapellidos"].value;
-            if (x == "") {
+            else if (y == "") {
                 alert("No se ha introducido el apellido nuevo.");
                 return false;
             }
         }
 
-        function validarTelefono() {
-            var x = document.forms["cambiarDatos"]["registrotelefono"].value;
-            if (x == "") {
-                alert("No se ha introducido teléfono.");
-                return false;
-            }
-            else if (x.length > 9) {
-                alert("El teléfono debe tener 9 números.");
-                return false;
-            }
-            else if (x.length < 9) {
-                alert("El teléfono debe tener 9 números.");
-                return false;
-            }
-            else if (isNaN(x)) {
-                alert("El número de teléfono no es válido.");
-                return false;
-            }
-        }
-
         function validarPassword() {
-            var x = document.forms["cambiarDatos"]["registropasswordvieja"].value;
-            var y = document.forms["cambiarDatos"]["registropassword"].value;
+            var x = document.forms["cambiarPassword"]["registropasswordvieja"].value;
+            var y = document.forms["cambiarPassword"]["registropassword"].value;
             if (x == "") {
+                alert("No se ha introducido el password viejo.");
+                return false;
+            }
+            else if (x == ) {
                 alert("No se ha introducido el password viejo.");
                 return false;
             }
@@ -72,8 +53,28 @@ if(!isset($_SESSION["usuario"])) {
             }
         }
 
+        function validarTelefono() {
+            var x = document.forms["cambiarTelefono"]["registrotelefono"].value;
+            if (x == "") {
+                alert("No se ha introducido el teléfono nuevo.");
+                return false;
+            }
+            else if (isNaN(x)) {
+                alert("No se ha introducido un teléfono correcto1.");
+                return false;
+            }
+            else if (x.length < 9) {
+                alert("No se ha introducido un teléfono correcto2.");
+                return false;
+            }
+            else if (x.length > 9) {
+                alert("No se ha introducido un teléfono correcto3.");
+                return false;
+            }
+        }
+
         function validarNacimiento() {
-            var x = document.forms["cambiarDatos"]["registronacimiento"].value;
+            var x = document.forms["cambiarNacimiento"]["registronacimiento"].value;
             if (x == "") {
                 alert("No se ha introducido una fecha de nacimiento.");
                 return false;
@@ -81,7 +82,7 @@ if(!isset($_SESSION["usuario"])) {
         }
 
         function validarSexo() {
-            var x = document.forms["cambiarDatos"]["sexo"].value;
+            var x = document.forms["cambiarSexo"]["sexo"].value;
             if (x == "") {
                 alert("No se ha introducido un sexo.");
                 return false;
@@ -118,7 +119,6 @@ if(!isset($_SESSION["usuario"])) {
         else
             $numerosig = 0;
 
-        $consulta = Usuario::obtenerUsuario($_SESSION["usuario"]);
 
         if (isset($_GET["usuarioamigo"])) {
             //Compruebo si el usuario amigo es el mismo que el usuario que se conectó para saber qué página mostrar.
@@ -142,10 +142,8 @@ if(!isset($_SESSION["usuario"])) {
 
         }
 
-        $imagen = $consulta->devolverValor("fotoperfil");
-
         echo "<a href='paginaEntrada.php'>
-                        <img class='fotoPerfil' alt='fotoPerfil' src='$imagen'/>
+                        <img class='fotoPerfil' alt='fotoPerfil' src='$_SESSION[imagen]'/>
                   </a>";
         ?>
     </section>
@@ -172,70 +170,58 @@ if(!isset($_SESSION["usuario"])) {
         </a>";
     ?>
 </section>
-    <?php
+<?php
     //Solamente es necesario introducir la contraseña actual para modificar algún datos
     if(!$pocaInfo) {
 
         echo " <section class='infoDatos'>
-                    <h2>Modificar Datos</h2>
-                        <form name='cambiarNombre' action='cambiarNombre.php' method='get' onsubmit='return validarNombre()'>
-                            <input class ='datos' type='text' id='registronombre' name='registronombre' placeholder='Nombre' size=20 />
-                        </form>
-                        <form name='cambiarApellido' action='cambiarApellido.php' method='get' onsubmit='return validarApellido()'>
+                    <h2>Modificar Datos</h2>";?>
+                        <form name="cambiarNombre" action="cambiarNombre.php" method="get" onsubmit="return validarNombre();">
+                            <input class ="datos" type="text" id="registronombre" name="registronombre" placeholder="Nombre" size=20 />
                             <input class ='datos' type='text' id='registroapellidos' name='registroapellidos' placeholder='Apellidos' size=20 />
-                        </form>
-                        <form name='cambiarTelefono' action='cambiarTelefono.php' method='get' onsubmit='return validarTelefono()'>
-                            <input class ='otrosDatos' type='tel' id='registrotelefono' name='registrotelefono' placeholder='Teléfono' size='20' />
+                            <input type="submit" value="Guardar"/>
                         </form>
                         <form name='cambiarPassword' action='cambiarPassword.php' method='get' onsubmit='return validarPassword()'>
-                            <input class ='otrosDatos' type='tel' id='registropasswordvieja' name='registropasswordvieja' placeholder='Contraseña Vieja' size='20' />
+                            <input class ='otrosDatos' type='password' id='registropasswordvieja' name='registropasswordvieja' placeholder='Contraseña Vieja' size='20' />
                             <input class ='otrosDatos' type='password' name='registropassword' placeholder='Contraseña Nueva' size=20 />
+                            <input type='submit' value='Guardar'/>
                         </form>  
+                        <br/>
+                        <form name='cambiarTelefono' action='cambiarTelefono.php' method='get' onsubmit='return validarTelefono()'>
+                            <label for="registrotelefono">Número de Teléfono:</label>
+                            <input class ="otrosDatos" type="number" id="registrotelefono" name="registrotelefono" size=20 placeholder="Telefono"/>
+                            <input type='submit' value='Guardar'/>
+                        </form>
                         <form name='cambiarNacimiento' action='cambiarNacimiento.php' method='get' onsubmit='return validarNacimiento()'>
-                            <label for='registronacimiento'>Fecha de Nacimiento:</label>
-                            <br/>
-                            <input class ='otrosDatos' type='date' id='registronacimiento' name='registronacimiento' size=46 />
+                            <label for="registronacimiento">Fecha de Nacimiento:</label>
+                            <input class ='otrosDatos' type='date' id='registronacimiento' name='registronacimiento' size=46 placeholder="Nacimiento"/>
+                            <input type='submit' value='Guardar'/>
                         </form>
                         <form name='cambiarSexo' action='cambiarSexo.php' method='get' onsubmit='return validarSexo()'>
                             <input class='sexo' type='radio' id='sexo' name='sexo' value='Mujer' /> Mujer
                             <input class='sexo' type='radio' id='sexo' name='sexo' value='Hombre' /> Hombre
                             <input class='sexo' type='radio' id='sexo' name='sexo' value='Otro' /> Otro
+                            <input type='submit' value='Guardar'/>
                         </form>
-                            <input class='botonreg' type='submit' value='Terminado'/> 
-                        </form>
-                </section>";
+<?php   echo"  </section>";
 
-        $datosUsuario = Usuario::obtenerUsuario($usuario_mostrar);
 
-        $user = $_SESSION["usuario"];
-
-        $contraseña = "*****";
-
-        $nombre = $datosUsuario->devolverValor("nombre");
-
-        $apellidos = $datosUsuario->devolverValor("apellidos");
-
-        $sexo = $datosUsuario->devolverValor("sexo");
-
-        $telefono = $datosUsuario->devolverValor("telefono");
-
-        $fechaNacimiento = $datosUsuario->devolverValor("nacimiento");
 
         echo "    <section class='infoDatos'>
                     <h2>Datos Actuales</h2>
-                        <p>Usuario : $user </p>
+                        <p>Usuario : $_SESSION[usuario] </p>
                         <br/>
-                        <p>Contraseña : $contraseña</p>
+                        <p>Contraseña : *********</p>
                         <br/>
-                        <p>Nombre : $nombre</p>
+                        <p>Nombre : $_SESSION[nombre]</p>
                         <br/>
-                        <p>Apellidos : $apellidos</p>
+                        <p>Apellidos : $_SESSION[apellidos]</p>
                         <br/>
-                        <p>Teléfono : $telefono</p>
+                        <p>Fecha de Nacimiento : $_SESSION[nacimiento]</p>
                         <br/>
-                        <p>Fecha de Nacimiento : $fechaNacimiento</p>
+                        <p>Telefono : $_SESSION[telefono]</p>
                         <br/>
-                        <p>Sexo : $sexo</p>
+                        <p>Sexo : $_SESSION[sexo]</p>
                   </section>";
     }
     else{

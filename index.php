@@ -36,7 +36,6 @@ if (isset($_SESSION["usuario"]))
         function validarRegister() {
             var x = document.forms["register"]["registronombre"].value;
             var y = document.forms["register"]["registroapellidos"].value;
-            var z = document.forms["register"]["registrotelefono"].value;
             var k = document.forms["register"]["correo"].value;
             var t = document.forms["register"]["registropassword"].value;
             var r = document.forms["register"]["registronacimiento"].value;
@@ -49,22 +48,6 @@ if (isset($_SESSION["usuario"]))
             }
             else if (y == "") {
                 alert("No se ha introducido apellidos.");
-                return false;
-            }
-            else if (z == "") {
-                alert("No se ha introducido teléfono.");
-                return false;
-            }
-            else if (z.length > 9) {
-                alert("El teléfono debe tener 9 números.");
-                return false;
-            }
-            else if (z.length < 9) {
-                alert("El teléfono debe tener 9 números.");
-                return false;
-            }
-            else if (isNaN(z)) {
-                alert("El número de teléfono no es válido.");
                 return false;
             }
             else if (t == "") {
@@ -130,8 +113,8 @@ if (isset($_SESSION["usuario"]))
             <input class ="datos" type="text" id="registronombre" name="registronombre" placeholder="Nombre" size=20 />
             <input class ="datos" type="text" id="registroapellidos" name="registroapellidos" placeholder="Apellidos" size=20 />
             <br/>
-            <input class ="otrosDatos" type="tel" id="registrotelefono" name="registrotelefono" placeholder="Teléfono" size="20" />
             <input class ="otrosDatos" type="password" id="registropassword" name="registropassword" placeholder="Contraseña" size=20 />
+            <input class ="otrosDatos" type="numeric" id="registrotelefono" name="registrotelefono" size=20 placeholder="Telefono"/>
             <br/>
             <input class ="otrosDatos" type="text" id="correo" name="correo" placeholder="Correo electrónico" size=46 />
             <br/>

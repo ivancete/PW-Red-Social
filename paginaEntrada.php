@@ -125,19 +125,19 @@ if(!isset($_SESSION["usuario"])) {
 
         <?php
 
-        for ($i = 0; $i < count($_SESSION["conectados"]); ++$i){
+        $conectados = Usuario::devolverConectados();
 
-            $usuario = $_SESSION["conectados"][$i];
+        for ($i = 0; $i < count($conectados); ++$i){
 
-            $datos = Usuario::obtenerUsuario($usuario);
+            $usuario = $conectados[$i]->devolverValor("usuario");
 
-            $name = $datos->devolverValor("nombre");
+            $nombre = $conectados[$i]->devolverValor("nombre");
 
-            $nombre = strtoupper($name);
+            $nombre = strtoupper($nombre);
 
-            $imagenfriend = $datos->devolverValor("fotoperfil");
+            $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
 
-            echo "<a href='biografia.php?usuarioamigo=$name'>
+            echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$nombre</p>
                     <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
@@ -158,17 +158,26 @@ if(!isset($_SESSION["usuario"])) {
 
             $nombre = strtoupper($nombre);
 
-            echo "  <p>$nombre</p>
-                    <img class='imagenComentario' alt='imagen perfil' src='$imagen'/>";
             ?>
             <article class="texto">
                 <form name="entrada" action="entrada.php" method="get" onsubmit="return validarEntrada()">
-                    <input size="102" type="text" name="titulo" placeholder="Escriba aquí el título"/>
-                    <br/>
-                    <br/>
-                    <textarea rows="10" cols="100" name="descripcion" placeholder="Escribe su Comentario"></textarea>
-                    <br/>
-                    <input class="enviar" type="submit" value="Enviar" />
+                    <table>
+                        <tr>
+                            <td>
+                                <input size="102" type="text" name="titulo" placeholder="Escriba aquí el título"/>
+                                <textarea rows="10" cols="100" name="descripcion" placeholder="Escribe su Comentario"></textarea>
+                            </td>
+                            <td>
+                                <?php
+                                echo "  <p>$nombre</p>
+                                        <img class='imagenComentario' alt='imagen perfil' src='$imagen'/>";
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input class="enviar" type="submit" value="Enviar" /></td>
+                        </tr>
+                    </table>
                 </form>
             </article>
 
@@ -189,7 +198,7 @@ if(!isset($_SESSION["usuario"])) {
 
             $titulo_mayuscula = strtoupper($titulo);
 
-            $usuario = $_GET["usuario_activo"];
+            $usuario = $_SESSION["usuario"];
 
             $persona = Usuario::obtenerUsuario($usuario);
 
@@ -197,9 +206,11 @@ if(!isset($_SESSION["usuario"])) {
 
             $nombrePerfil = $persona->devolverValor("nombre");
 
+            $idhistoria = $historias_mias[$i]->devolverValor("idhistoria");
+
             $nombrePerfil_mayuscula = strtoupper($nombrePerfil);
 
-            echo "<a href='biografia.php'>                                   
+            echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$_SESSION[usuario]'>
                     <article class='historiaIndividual'>
                         <p>$nombrePerfil_mayuscula</p>
                         <img class='fotoconectado' alt='perfil' src='$imagen'/>

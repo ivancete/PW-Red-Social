@@ -5,7 +5,7 @@ require_once ('usuario.php');
 
 class Historia extends Mysql{
 
-    protected $datos = array("idhistoria" => "", "descripcion" => "", "titulo" => "", "refimagen" => "",
+    protected $datos = array("idhistoria" => "","descripcion" => "", "titulo" => "", "refimagen" => "",
         "usuario" => "", "fecha" => "");
 
     public static function obtenerHistoria($user, $identificador){

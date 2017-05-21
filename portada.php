@@ -15,7 +15,7 @@ if(!isset($_SESSION["usuario"])){
     <title>Portada</title>
     <link rel="stylesheet"  href="diseno.css"/>
     <link rel="stylesheet"  href="dS.css" media="(max-width: 480px)"/>
-    <meta charset="UTF-8" name="viewport" content="width=device−width, initial−scale=1.0, url=portada.html"
+    <meta charset="UTF-8" name="viewport" content="width=device−width, initial−scale=1.0, url=portada.php"
           http-equiv="refresh"/>
 </head>
 <body>
@@ -76,15 +76,13 @@ echo    "<a href='biografia.php'>
 <section class="scroll">
     <?php
 
-    $conectados = Usuario::devolverAmigos($_SESSION["usuario"]);
+    for($i = 0; $i < count($_SESSION["amigos"]); ++$i) {
 
-    for($i = 0; $i < count($conectados); ++$i) {
+        $usuario = $_SESSION["amigos"][$i]->devolverValor("usuario");
 
-        $usuario = $conectados[$i]->devolverValor("usuario");
+        $name = $_SESSION["amigos"][$i]->devolverValor("nombre");
 
-        $name = $conectados[$i]->devolverValor("nombre");
-
-        $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
+        $imagenfriend = $_SESSION["amigos"][$i]->devolverValor("fotoperfil");
 
         $name_mayuscula = strtoupper($name);
 
@@ -105,17 +103,17 @@ echo    "<a href='biografia.php'>
 
     <?php
 
-    for ($i = 0; $i < count($_SESSION["conectados"]); ++$i){
+    $conectados = Usuario::devolverConectados();
 
-        $usuario = $_SESSION["conectados"][$i];
+    for ($i = 0; $i < count($conectados); ++$i){
 
-        $datos = Usuario::obtenerUsuario($usuario);
+        $usuario = $conectados[$i]->devolverValor("usuario");
 
-        $nombre = $datos->devolverValor("nombre");
+        $nombre = $conectados[$i]->devolverValor("nombre");
 
         $nombre = strtoupper($nombre);
 
-        $imagenfriend = $datos->devolverValor("fotoperfil");
+        $imagenfriend = $conectados[$i]->devolverValor("fotoperfil");
 
         echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
@@ -129,7 +127,13 @@ echo    "<a href='biografia.php'>
     <section class="historia">
         <?php
 
-            $historias_amigos = Historia::obtenerHistoriasAmigos($_SESSION["usuario"]);
+            $historias_amigos = Historia::obtenerHistoriasAmigosOrdenadas($_SESSION["usuario"],$numerosig);
+
+            $flechas = true;
+
+            if(count($historias_amigos) < 9)
+                $flechas = false;
+
 
             for($i = 0; $i < count($historias_amigos); ++$i) {
 
@@ -153,7 +157,7 @@ echo    "<a href='biografia.php'>
 
                 $titulo_mayuscula = strtoupper($titulo);
 
-                echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuario'>                                   
+                echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuario'>                          
                         <article class='historiaIndividual'>
                             <p>$nombrePerfil_mayuscula</p>
                             <img class='fotoconectado' alt='perfilAmigo' src='$imagenPerfil'/>
@@ -169,6 +173,8 @@ echo    "<a href='biografia.php'>
 <section>
     <?php
 
+    if($flechas) {
+
         $auxNumSigIzq = $numerosig - 9;
 
         if ($auxNumSigIzq < 0)
@@ -180,14 +186,15 @@ echo    "<a href='biografia.php'>
 
         $auxNumSigDer = $numerosig + 9;
 
-        $historias_amigos = Historia::obtenerHistoriasAmigosOrdenadas($_SESSION["usuario"], $auxNumSigDer,9);
+        $historias_amigos = Historia::obtenerHistoriasAmigosOrdenadas($_SESSION["usuario"], $auxNumSigDer);
 
-        if(!$historias_amigos)
+        if (!$historias_amigos)
             $auxNumSigDer = $numerosig;
 
         echo "<a href='portada.php?numerosig=$auxNumSigDer'>
                      <img class='flecha' alt='flechaDch' src='flecha_der.png' />
               </a>";
+    }
     ?>
 </section>
 <footer>

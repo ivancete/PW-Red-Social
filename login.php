@@ -7,15 +7,30 @@
 
       $_SESSION["usuario"] = $_GET["user"];
 
-      if (empty($_SESSION["conectados"])){
+      $_SESSION["password"] = $_GET["password"];
 
-          $_SESSION["conectados"] = array();
+      $user = Usuario::obtenerUsuario($_GET["user"]);
 
-          $_SESSION["conectados"][] = $_GET["user"];
-      }
-      else{
-          $_SESSION["conectados"][] = $_GET["user"];
-      }
+      $_SESSION["nombre"] = $user->devolverValor("nombre");
+
+      $_SESSION["apellidos"] = $user->devolverValor("apellidos");
+
+      $_SESSION["nacimiento"] = $user->devolverValor("nacimiento");
+
+      $_SESSION["sexo"] = $user->devolverValor("sexo");
+
+      $_SESSION["imagen"] = $user->devolverValor("fotoperfil");
+
+      $_SESSION["telefono"] = $user->devolverValor("telefono");
+
+      $_SESSION["amigos"] = array();
+
+      $misAmigos = Usuario::devolverAmigos($_SESSION["usuario"]);
+
+      for ($i=0; $i < count($misAmigos); ++$i)
+          $_SESSION["amigos"][] = $misAmigos[$i];
+
+      Usuario::modificarAConectado($_GET["user"]);
 
       header("Location: portada.php");
       exit;
