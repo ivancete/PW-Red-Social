@@ -33,13 +33,15 @@ if (isset($_SESSION["usuario"]))
 
     <!--Validación del registro de un nuevo usuario -->
     <script>
-        function validarRegister() {
+        function validarRegistro() {
             var x = document.forms["register"]["registronombre"].value;
             var y = document.forms["register"]["registroapellidos"].value;
             var k = document.forms["register"]["correo"].value;
             var t = document.forms["register"]["registropassword"].value;
             var r = document.forms["register"]["registronacimiento"].value;
             var m = document.forms["register"]["sexo"].value;
+            var z = document.forms["register"]["registrotelefono"].value;
+
             expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             if (x == "") {
@@ -78,6 +80,22 @@ if (isset($_SESSION["usuario"]))
                 alert("No se ha introducido sexo.");
                 return false;
             }
+            else if (z == "") {
+                alert("No se ha introducido un teléfono.");
+                return false;
+            }
+            else if (z.length < 9) {
+                alert("Se ha introducido un número menor que 9.");
+                return false;
+            }
+            else if (z.length > 9) {
+                alert("Se ha introducido un número mayor que 9.");
+                return false;
+            }
+            else if (isNaN(z)) {
+                alert("No se ha introducido un teléfono válido.");
+                return false;
+            }
         }
     </script>
 </head>
@@ -109,7 +127,7 @@ if (isset($_SESSION["usuario"]))
     </section>
     <section class="formulario">
         <p class="registro">Registrarse</p>
-        <form name="register" action="userNew.php" method="get" onsubmit="return validarRegister()">
+        <form name="register" action="userNew.php" method="get" onsubmit="return validarRegistro()">
             <input class ="datos" type="text" id="registronombre" name="registronombre" placeholder="Nombre" size=20 />
             <input class ="datos" type="text" id="registroapellidos" name="registroapellidos" placeholder="Apellidos" size=20 />
             <br/>

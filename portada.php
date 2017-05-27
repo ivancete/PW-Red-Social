@@ -17,6 +17,32 @@ if(!isset($_SESSION["usuario"])){
     <link rel="stylesheet"  href="dS.css" media="(max-width: 480px)"/>
     <meta charset="UTF-8" name="viewport" content="width=device−width, initial−scale=1.0, url=portada.php"
           http-equiv="refresh"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        function mostrarTitulos(usuario) {
+
+            var variable = usuario.target.id;
+
+
+            $.ajax({
+
+                type: "GET",
+
+                url: "titulosUsuario.php?usuario="+variable+"",
+
+                success: function (response){
+                    var myWindow = window.open("", "Títulos", "width=1000,height=500");
+                    myWindow.document.write(response);
+                },
+
+                error: function(response) {
+                    alert("Error al mostrar los títulos");
+                },
+            });
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -89,7 +115,8 @@ echo    "<a href='biografia.php'>
         echo "<a href='biografia.php?usuarioamigo=$usuario'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
-                        <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
+                        <img id='$usuario' class='fotoconectado' alt='fotoAmigo' src='$imagenfriend' 
+                        onmouseover='mostrarTitulos(event)'/>
                     </article>
                   </a>";
     }
@@ -118,7 +145,7 @@ echo    "<a href='biografia.php'>
         echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$nombre</p>
-                    <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
+                    <img id='$usuario' class='fotoconectado' alt='fotoAmigo' src='$imagenfriend' onmouseover='mostrarTitulos(event)'/>
                 </article>
               </a>";
     }

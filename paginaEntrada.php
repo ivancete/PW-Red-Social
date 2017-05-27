@@ -23,7 +23,7 @@ if(!isset($_SESSION["usuario"])) {
                 alert("No se ha introducido título.");
                 return false;
             }
-            else if (x.length > 100) {
+            else if (x.length > 50) {
                 alert("Se han introducido más de 100 caracteres en el título.");
                 return false;
             }
