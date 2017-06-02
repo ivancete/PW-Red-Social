@@ -14,8 +14,10 @@ if(!isset($_SESSION["usuario"])) {
     <meta charset="utf-8"/>
     <title>Creación Entrada</title>
     <link rel="stylesheet"  href="diseno.css"/>
+
     <!--Validación de la creación de una entrada -->
-    <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
         function validarEntrada() {
             var x = document.forms["entrada"]["titulo"].value;
             var y = document.forms["entrada"]["descripcion"].value;
@@ -31,10 +33,34 @@ if(!isset($_SESSION["usuario"])) {
                 alert("No se ha introducido descripción.");
                 return false;
             }
-            else if (x.length > 190) {
-                alert("Se han introducido más de 190 caracteres en la descripción.");
+            else if (y.length > 150) {
+                alert("Se han introducido más de 150 caracteres en la descripción.");
                 return false;
             }
+        }
+
+        var myWindow;
+
+        function mostrarTitulos(usuario) {
+
+            var variable = usuario.target.id;
+
+
+            $.ajax({
+
+                type: "GET",
+
+                url: "titulosUsuario.php?usuario="+variable+"",
+
+                success: function (response){
+                    myWindow = window.open("", "Títulos", "width=300,height=300");
+                    myWindow.document.write(response);
+                },
+
+                error: function(response) {
+                    alert("Error al mostrar los títulos");
+                },
+            });
         }
     </script>
 </head>
@@ -111,7 +137,7 @@ if(!isset($_SESSION["usuario"])) {
         echo "<a href='biografia.php?usuarioamigo=$name'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
-                        <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
+                        <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend' onmouseover='mostrarTitulos()'/>
                     </article>
                   </a>";
     }
@@ -140,7 +166,7 @@ if(!isset($_SESSION["usuario"])) {
             echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$nombre</p>
-                    <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
+                    <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend' onmouseover='mostrarTitulos()'/>
                 </article>
               </a>";
         }

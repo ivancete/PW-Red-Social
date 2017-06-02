@@ -17,8 +17,38 @@ if(!isset($_SESSION["usuario"])) {
     <link rel="stylesheet"  href="dS.css" media="(max-width: 480px)"/>
     <meta charset="UTF-8" name="viewport" content="width=device−width, initial−scale=1.0, url=portada.html"
           http-equiv="refresh"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        function mostrarTitulos(usuario) {
+
+            var variable = usuario.target.id;
+
+
+            $.ajax({
+
+                type: "GET",
+
+                url: "titulosUsuario.php?usuario="+variable+"",
+
+                success: function (response){
+                    var myWindow = window.open("", "Títulos", "width=300,height=300");
+                    myWindow.document.write(response);
+                },
+
+                error: function(response) {
+                    alert("Error al mostrar los títulos");
+                },
+            });
+        }
+
+        function cerrarTitulos(){
+            myWindow.close();
+        }
+    </script>
 </head>
-<body>
+<body onload="cerrarTitulos()">
 <header>
     <section>
         <?php
@@ -97,7 +127,7 @@ if(!isset($_SESSION["usuario"])) {
         echo "<a href='biografia.php?usuarioamigo=$usuario'>
                     <article class='textofoto'>
                         <p>$name_mayuscula</p>
-                        <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
+                        <img id='$usuario' class='fotoconectado' alt='fotoAmigo' src='$imagenfriend' onmouseover='mostrarTitulos(event)'/>
                     </article>
                   </a>";
     }
@@ -126,7 +156,7 @@ if(!isset($_SESSION["usuario"])) {
             echo "<a href='biografia.php?usuarioamigo=$usuario'>
                 <article>
                     <p class='textoConectado'>$nombre</p>
-                    <img class='fotoconectado' alt='fotoAmigo' src='$imagenfriend'/>
+                    <img id='$usuario' class='fotoconectado' alt='fotoAmigo' src='$imagenfriend' onmouseover='mostrarTitulos(event)'/>
                 </article>
               </a>";
         }
@@ -146,6 +176,11 @@ if(!isset($_SESSION["usuario"])) {
         for($i = 0; $i < count($historias_mias); ++$i) {
 
             $descripcion = $historias_mias[$i]->devolverValor("descripcion");
+
+            $descripcionSub = substr($descripcion,0,50);
+
+            if(strlen($descripcion) > 50)
+                $descripcionSub = $descripcionSub." +";
 
             $titulo = $historias_mias[$i]->devolverValor("titulo");
 
@@ -182,7 +217,7 @@ if(!isset($_SESSION["usuario"])) {
                         <p>$nombrePerfil_mayuscula</p>
                         <img class='fotoconectado' alt='Imagen Entrada' src='$imagenPerfil'/>
                         <h4>$titulo_mayuscula</h4>
-                        <p>$descripcion</p>
+                        <p>$descripcionSub</p>
                         <p>$fecha</p>
                     </article>
                   </a>";

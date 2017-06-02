@@ -1,7 +1,7 @@
 *{
     padding: 0;
     margin: 0;
-    font-style: arial;
+    font-style: normal;
 }
 
 html, body{
@@ -107,13 +107,13 @@ h4 a{
 
 .registro{
     font-size: 40px;
-    font-style: sans-serif;
+    font-style: normal;
     margin-bottom: 30px;
 }
 
 .sexo{
     margin-left: 2%;
-    font-style: sans-serif;
+    font-style: normal;
     margin-top: 4%;
 }
 
@@ -184,7 +184,7 @@ aside{
     width: 50%;
     height: 100px;
     border: 2px solid #8b9dc3;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 
 .historiaIndividual{
@@ -197,10 +197,10 @@ aside{
     margin: 1%;
     height: 100px;
     width: 30%;
-    overflow: hidden;
     background-color: #f7f7f7;
     box-shadow: 10px 10px 5px #888888;
     border-radius: 2px;
+    overflow: hidden;
 }
 
 #mostrar{
@@ -369,4 +369,46 @@ aside{
     margin-left: 25%;
     margin-top: 20%;
     border: 10px solid #204060;
+}
+
+.tablaTitulos{
+    width: 100%;
+}
+
+thead{
+    background-color: #204060;
+    color: white;
+}
+
+tbody th{
+    border-bottom: 2px solid #204060;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    width: 280px;
+    margin-top: 2%;
+    margin-left: 37%;
+    text-align: center;
+    font-family: arial;
+}
+
+.card1 {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    width: 300px;
+    margin-right: 10%;
+    margin-top: 7%;
+    text-align: center;
+    font-family: arial;
+    float: right;
+}
+
+.container {
+    padding: 0 16px;
+}
+
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
 }

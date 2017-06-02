@@ -7,24 +7,34 @@ $historias = Historia::obtenerMisHistorias($_GET["usuario"]);
 if(count($historias) > 0) {
 
     echo "
-    <table border='1'>
-        <tr>
-            <th>Título</th>
-        </tr>
-        </thead>
-        <tbody>";
-
-    for ($i = 0; $i < count($historias); ++$i) {
-
-        $titulo = $historias[$i]->devolverValor("titulo");
-
-        echo "
+    <html>
+    <head>
+    <meta charset='utf-8'/>
+    <link rel='stylesheet'  href='diseno.css'/>
+    <title>Títulos de Entradas</title>
+    </head>
+    <body>
+    <table class='tablaTitulos'>
+        <thead>
             <tr>
-                <th > $titulo </th >
-            </tr >";
-    }
-    echo "    </tbody>
-    </table>";
+                <th>Títulos</th>
+            </tr>
+        </thead>
+        <tbody border='1'>";
+
+            for ($i = 0; $i < count($historias); ++$i) {
+
+                $titulo = $historias[$i]->devolverValor("titulo");
+
+                echo "
+                    <tr>
+                        <th> $titulo </th >
+                    </tr >";
+            }
+    echo "</tbody>
+    </table>
+    </body>
+    </html>";
 }
 else{
     echo "Este usuario no tiene historias creadas";

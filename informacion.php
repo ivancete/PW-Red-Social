@@ -205,24 +205,17 @@ if(!isset($_SESSION["usuario"])) {
                         </form>
 <?php   echo"  </section>";
 
-
-
-        echo "    <section class='infoDatos'>
-                    <h2>Datos Actuales</h2>
-                        <p>Usuario : $_SESSION[usuario] </p>
-                        <br/>
-                        <p>Contraseña : *********</p>
-                        <br/>
-                        <p>Nombre : $_SESSION[nombre]</p>
-                        <br/>
-                        <p>Apellidos : $_SESSION[apellidos]</p>
-                        <br/>
-                        <p>Fecha de Nacimiento : $_SESSION[nacimiento]</p>
-                        <br/>
-                        <p>Telefono : $_SESSION[telefono]</p>
-                        <br/>
-                        <p>Sexo : $_SESSION[sexo]</p>
-                  </section>";
+        echo"<section class='card1'>
+              <img src='$_SESSION[imagen]' alt='usuario' style='width:50%'>
+              <section class='container'>
+                <h1>Usuario : $_SESSION[usuario] </h1>
+                <p>Contraseña : *********</p>
+                <p class='title'>Apellidos : $_SESSION[apellidos]</p>
+                <p>Fecha de Nacimiento : $_SESSION[nacimiento]</p>
+                <p>Telefono : $_SESSION[telefono]</p>
+                <p>Sexo : $_SESSION[sexo]</p>
+              </section>
+            </section>";
     }
     else{
         $datosUsuario = Usuario::obtenerUsuario($usuario_mostrar);
@@ -237,16 +230,17 @@ if(!isset($_SESSION["usuario"])) {
 
         $fechaNacimiento = $datosUsuario->devolverValor("nacimiento");
 
-        echo "    <section class='infoDatos'>
-                    <h2>Datos Actuales</h2>
-                        <p>Nombre : $nombre</p>
-                        <br/>
-                        <p>Apellidos : $apellidos</p>
-                        <br/>
-                        <p>Sexo : $sexo</p>
-                        <br/>
-                        <p>Fecha de Nacimiento : $fechaNacimiento</p>
-                  </section>";
+        $foto = $datosUsuario->devolverValor("fotoperfil");
+
+        echo"<section class='card'>
+              <img src='$foto' alt='usuario' style='width:100%'>
+              <section class='container'>
+                <h1>Nombre : $nombre</h1>
+                <p class='title'>Apellidos : $apellidos</p>
+                <p>Fecha de Nacimiento : $fechaNacimiento</p>
+                <p>Sexo : $sexo</p>
+              </section>
+            </section>";
     }
     ?>
 

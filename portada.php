@@ -21,6 +21,8 @@ if(!isset($_SESSION["usuario"])){
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
 
+        var myWindow;
+
         function mostrarTitulos(usuario) {
 
             var variable = usuario.target.id;
@@ -33,7 +35,7 @@ if(!isset($_SESSION["usuario"])){
                 url: "titulosUsuario.php?usuario="+variable+"",
 
                 success: function (response){
-                    var myWindow = window.open("", "Títulos", "width=1000,height=500");
+                    myWindow = window.open("", "Títulos", "width=300,height=300");
                     myWindow.document.write(response);
                 },
 
@@ -44,7 +46,7 @@ if(!isset($_SESSION["usuario"])){
         }
     </script>
 </head>
-<body>
+<body">
 <header>
     <section>
         <?php
@@ -184,12 +186,17 @@ echo    "<a href='biografia.php'>
 
                 $titulo_mayuscula = strtoupper($titulo);
 
+                $descripcionSub = substr($descripcion,0,50);
+
+                if(strlen($descripcion) > 50)
+                    $descripcionSub = $descripcionSub." +";
+
                 echo "<a href='detalleHistoria.php?historia=$idhistoria&usuarioamigo=$usuario'>                          
                         <article class='historiaIndividual'>
                             <p>$nombrePerfil_mayuscula</p>
                             <img class='fotoconectado' alt='perfilAmigo' src='$imagenPerfil'/>
                             <h4>$titulo_mayuscula</h4>
-                            <p>$descripcion</p>
+                            <p>$descripcionSub</p>
                             <p>$fecha</p>
                         </article>
                       </a>";

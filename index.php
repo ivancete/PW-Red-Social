@@ -16,11 +16,15 @@ if (isset($_SESSION["usuario"]))
         function validarLogin() {
             var x = document.forms["login"]["user"].value;
             var y = document.forms["login"]["password"].value;
+            document.getElementById("user").style.borderColor = 'white';
+            document.getElementById("password").style.borderColor = 'white';
             if (x == "") {
+                document.getElementById("user").style.borderColor = 'red';
                 alert("No se ha introducido usuario.");
                 return false;
             }
             else if (y == "") {
+                document.getElementById("password").style.borderColor = 'red';
                 alert("No se ha introducido contraseña.");
                 return false;
             }
@@ -32,6 +36,7 @@ if (isset($_SESSION["usuario"]))
     </script>
 
     <!--Validación del registro de un nuevo usuario -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         function validarRegistro() {
             var x = document.forms["register"]["registronombre"].value;
@@ -42,17 +47,26 @@ if (isset($_SESSION["usuario"]))
             var m = document.forms["register"]["sexo"].value;
             var z = document.forms["register"]["registrotelefono"].value;
 
+            document.getElementById("registronombre").style.borderColor = '#204060';
+            document.getElementById("registroapellidos").style.borderColor = '#204060';
+            document.getElementById("registropassword").style.borderColor = '#204060';
+            document.getElementById("correo").style.borderColor = '#204060';
+            document.getElementById("registronacimiento").style.borderColor = '#204060';
+
             expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             if (x == "") {
+                document.getElementById("registronombre").style.borderColor = 'red';
                 alert("No se ha introducido nombre.");
                 return false;
             }
             else if (y == "") {
+                document.getElementById("registroapellidos").style.borderColor = 'red';
                 alert("No se ha introducido apellidos.");
                 return false;
             }
             else if (t == "") {
+                document.getElementById("registropassword").style.borderColor = 'red';
                 alert("No se ha introducido password.");
                 return false;
             }
@@ -65,6 +79,7 @@ if (isset($_SESSION["usuario"]))
                 return false;
             }
             else if (k == "") {
+                document.getElementById("correo").style.borderColor = 'red';
                 alert("No se ha introducido correo.");
                 return false;
             }
@@ -73,6 +88,7 @@ if (isset($_SESSION["usuario"]))
                 return false;
             }
             else if (r == "") {
+                document.getElementById("registronacimiento").style.borderColor = 'red';
                 alert("No se ha introducido fecha de nacimiento.");
                 return false;
             }
@@ -141,9 +157,9 @@ if (isset($_SESSION["usuario"]))
             <br/>
             <input class ="otrosDatos" type="date" id="registronacimiento" name="registronacimiento" size=46 />
             <br/>
-            <input class="sexo" type="radio" name="sexo" value="Mujer" /> Mujer
-            <input class="sexo" type="radio" name="sexo" value="Hombre" /> Hombre
-            <input class="sexo" type="radio" name="sexo" value="Otro" /> Otro
+            <input id="sexo" class="sexo" type="radio" name="sexo" value="Mujer" /> Mujer
+            <input id="sexo" class="sexo" type="radio" name="sexo" value="Hombre" /> Hombre
+            <input id="sexo" class="sexo" type="radio" name="sexo" value="Otro" /> Otro
             <br/>
             <input class="botonreg" type="submit" value="Terminado"/>
         </form>
