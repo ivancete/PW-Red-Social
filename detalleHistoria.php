@@ -24,7 +24,7 @@ if(!isset($_SESSION["usuario"])) {
                 alert("No se ha introducido comentario.");
                 return false;
             }
-            if (x.length > 190) {
+            if (x.length > 150) {
                 alert("Se han introducido más de 190 caracteres en el comentario.");
                 return false;
             }
